@@ -1,26 +1,34 @@
 import { ScrollView } from "react-native"
 
+import { Ingredient } from "@/components/Ingredient"
 
 import { styles } from "./styles"
-import { Ingredient, IngredientProps } from "@/components/Ingredient"
+
+export type IngredientProps = {
+  id: string
+  name: string
+  image: string
+  selected?: boolean
+}
 
 type Props = {
   ingredients: IngredientProps[]
+  handleToggleSelected: (ingredientId: string) => void
 }
 
-export function Ingredients({ ingredients }: Props) {
+export function Ingredients({ ingredients, handleToggleSelected }: Props) {
   return (
     <ScrollView
-      horizontal
-      style={styles.container}
-      contentContainerStyle={styles.ingredientsContent}
+      contentContainerStyle={styles.container}
       showsHorizontalScrollIndicator={false}
     >
       {ingredients.map((ingredient) => (
         <Ingredient
-          key={ingredient.name}
+          key={ingredient.id}
           name={ingredient.name}
-          image=""
+          image={ingredient.image}
+          selected={ingredient.selected}
+          onPress={() => handleToggleSelected(ingredient.id)}
         />
       ))}
     </ScrollView>
