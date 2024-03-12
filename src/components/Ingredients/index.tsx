@@ -1,22 +1,41 @@
+import { useEffect, useState } from "react";
 import { ScrollView } from "react-native"
 
+import { Loading } from '@/components/Loading';
 import { Ingredient } from "@/components/Ingredient"
+
+import { services } from "@/services";
 
 import { styles } from "./styles"
 
-export type IngredientProps = {
-  id: string
-  name: string
-  image: string
+export type IngredientProps = IngredientResponse & {
   selected?: boolean
 }
 
-type Props = {
-  ingredients: IngredientProps[]
-  handleToggleSelected: (ingredientId: string) => void
-}
+export function Ingredients() {
+  const [isLoading, setIsLoading] = useState(true)
 
-export function Ingredients({ ingredients, handleToggleSelected }: Props) {
+  const [ingredients, setIngredients] = useState<IngredientResponse[]>([])
+  const [idsSelectedIngredients, setIdsSelectedIngredients] = useState<string[]>([])
+  
+  useEffect(() => {
+    services.ingredients.findAll()
+      .then(setIngredients)
+      .finally(() => setIsLoading(false))
+  }, [])
+
+  function handleToggleSelected(value: string) {
+    if (idsSelectedIngredients.includes(value)) {
+      return setIdsSelectedIngredients((state) => state.filter((item) => item !== value))
+    }
+
+    setIdsSelectedIngredients((state) => [...state, value])
+  }
+
+  if (isLoading) {
+    return <Loading />
+  }
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -27,7 +46,7 @@ export function Ingredients({ ingredients, handleToggleSelected }: Props) {
           key={ingredient.id}
           name={ingredient.name}
           image={ingredient.image}
-          selected={ingredient.selected}
+          selected={idsSelectedIngredients.includes(ingredient.id)}
           onPress={() => handleToggleSelected(ingredient.id)}
         />
       ))}
