@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { ScrollView } from "react-native"
+import { Alert, ScrollView } from "react-native"
 
 import { Loading } from '@/components/Loading';
 import { Ingredient } from "@/components/Ingredient"
+import { Selected } from "@/components/Selected";
 
 import { services } from "@/services";
 
@@ -32,24 +33,41 @@ export function Ingredients() {
     setIdsSelectedIngredients((state) => [...state, value])
   }
 
+  function handleClearSelected() {
+    Alert.alert("Limpar", "Deseja limpar tudo?", [
+      { text: "Não", style: "cancel" },
+      { text: "Sim", onPress: () => setIdsSelectedIngredients([])}
+    ])
+  }
+
   if (isLoading) {
     return <Loading />
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      showsHorizontalScrollIndicator={false}
-    >
-      {ingredients.map((ingredient) => (
-        <Ingredient
+    <>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsHorizontalScrollIndicator={false}
+        >
+        {ingredients.map((ingredient) => (
+          <Ingredient
           key={ingredient.id}
           name={ingredient.name}
           image={ingredient.image}
           selected={idsSelectedIngredients.includes(ingredient.id)}
           onPress={() => handleToggleSelected(ingredient.id)}
-        />
-      ))}
-    </ScrollView>
+          />
+          ))}
+      </ScrollView>
+
+
+      {idsSelectedIngredients.length > 0 &&
+        <Selected
+          quantity={idsSelectedIngredients.length}
+          onClear={handleClearSelected}
+          onSearch={() => { }} />
+      }
+    </>
   )
 }
