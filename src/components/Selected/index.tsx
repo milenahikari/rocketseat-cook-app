@@ -2,6 +2,8 @@ import { Text, View } from "react-native"
 import Animated, { BounceOutDown, SlideInDown } from "react-native-reanimated"
 import { MaterialIcons } from "@expo/vector-icons"
 
+import { Button } from "../Button"
+
 import { styles } from './styles'
 import { theme } from "@/theme"
 
@@ -17,5 +19,7 @@ export function Selected({ quantity, onClear, onSearch}: Props) {
       <Text style={styles.label}>{quantity} ingredientes selecionados</Text>
       <MaterialIcons name="close" size={24} onPress={onClear} color={theme.colors.gray_400 } />
     </View>
+
+    <Button title='Encontrar' onPress={onSearch} />
   </Animated.View>
 } 

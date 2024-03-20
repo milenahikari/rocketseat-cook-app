@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Alert, ScrollView } from "react-native"
+import { router } from "expo-router";
 
 import { Loading } from '@/components/Loading';
 import { Ingredient } from "@/components/Ingredient"
@@ -40,6 +41,10 @@ export function Ingredients() {
     ])
   }
 
+  function handleSearch() {
+    router.navigate('/recipes')
+  }
+
   if (isLoading) {
     return <Loading />
   }
@@ -66,7 +71,7 @@ export function Ingredients() {
         <Selected
           quantity={idsSelectedIngredients.length}
           onClear={handleClearSelected}
-          onSearch={() => { }} />
+          onSearch={handleSearch} />
       }
     </>
   )
